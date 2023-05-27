@@ -35,8 +35,14 @@ class DbAddAccount {
   ) {}
 
   async add(params: AddAccount.Params): Promise<AddAccount.Result> {
-    await this.checkAccountByEmailRepository.checkByEmail(params.email)
-    return true
+    const exists = await this.checkAccountByEmailRepository.checkByEmail(
+      params.email
+    )
+    let isValid = false
+    if (!exists) {
+      isValid = true
+    }
+    return isValid
   }
 }
 
@@ -70,5 +76,12 @@ describe('DbAddAccount Usecase', () => {
     checkAccountByEmailRepositorySpy.result = false
     const result = await sut.add(params)
     expect(result).toBe(true)
+  })
+
+  test('3 - Should return false if CheckAccountByEmailRepository returns true', async () => {
+    const { sut, checkAccountByEmailRepositorySpy } = makeSut()
+    checkAccountByEmailRepositorySpy.result = true
+    const result = await sut.add(params)
+    expect(result).toBe(false)
   })
 })
