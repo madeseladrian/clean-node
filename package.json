@@ -24,6 +24,7 @@
   "author": "Mades Almeida",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^8.0.1",
     "@types/jest": "^29.5.1",
     "@types/module-alias": "^2.0.1",
     "@types/node": "^20.2.5",
