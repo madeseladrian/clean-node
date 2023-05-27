@@ -4,7 +4,9 @@
   "description": "Projeto de pesquisa usando arquitetura limpa com nodejs",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc -p tsconfig-build.json",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
     "start": "node dist/main/api"
   },
   "keywords": [],
@@ -13,6 +15,12 @@
   "devDependencies": {
     "@types/module-alias": "^2.0.1",
     "@types/node": "^20.2.5",
+    "@typescript-eslint/eslint-plugin": "^5.59.7",
+    "@typescript-eslint/parser": "^5.59.7",
+    "eslint": "^8.41.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "2.8.8",
     "typescript": "^5.0.4"
   },
   "dependencies": {
