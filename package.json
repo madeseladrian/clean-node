@@ -1,0 +1,10 @@
+{
+  "name": "clean-node",
+  "version": "1.0.0",
+  "description": "Projeto de pesquisa usando arquitetura limpa com nodejs",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "Mades Almeida",
+  "license": "ISC"
+}
