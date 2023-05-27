@@ -3,8 +3,20 @@
   "version": "1.0.0",
   "description": "Projeto de pesquisa usando arquitetura limpa com nodejs",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "start": "node dist/main/api"
+  },
   "keywords": [],
   "author": "Mades Almeida",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/module-alias": "^2.0.1",
+    "@types/node": "^20.2.5",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "module-alias": "^2.2.2",
+    "rimraf": "^5.0.1"
+  }
 }
