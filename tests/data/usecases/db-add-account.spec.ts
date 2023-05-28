@@ -87,4 +87,11 @@ describe('DbAddAccount Usecase', () => {
       password: hasherSpy.digest
     })
   })
+
+  test('8 - Should return false if AddAccountRepository returns false', async () => {
+    const { sut, addAccountRepositorySpy } = makeSut()
+    addAccountRepositorySpy.result = false
+    const result = await sut.add(params)
+    expect(result).toBe(false)
+  })
 })
