@@ -2,7 +2,12 @@ import { AddAccount } from '@/domain/usecases'
 
 import { Validation } from '@/presentation/contracts'
 import { EmailInUseError } from '@/presentation/errors'
-import { badRequest, forbidden, serverError } from '@/presentation/helpers'
+import {
+  addAccount,
+  badRequest,
+  forbidden,
+  serverError
+} from '@/presentation/helpers'
 
 export class SignUpController {
   constructor(
@@ -21,6 +26,7 @@ export class SignUpController {
       if (!isValid) {
         return forbidden(new EmailInUseError())
       }
+      return addAccount(isValid)
     } catch (error: any) {
       return serverError(error)
     }
