@@ -5,7 +5,7 @@ import { MissingParamError } from '@/presentation/errors'
 import { badRequest, serverError } from '@/presentation/helpers'
 
 import { throwError } from '@/tests/domain/mocks'
-import { ValidationSpy } from '@/tests/presentation/mocks'
+import { AddAccountSpy, ValidationSpy } from '@/tests/presentation/mocks'
 
 const mockRequest = (): SignUpController.Request => {
   const password = faker.internet.password()
@@ -19,14 +19,17 @@ const mockRequest = (): SignUpController.Request => {
 
 type SutTypes = {
   sut: SignUpController
+  addAccountSpy: AddAccountSpy
   validationSpy: ValidationSpy
 }
 
 const makeSut = (): SutTypes => {
+  const addAccountSpy = new AddAccountSpy()
   const validationSpy = new ValidationSpy()
-  const sut = new SignUpController(validationSpy)
+  const sut = new SignUpController(addAccountSpy, validationSpy)
   return {
     sut,
+    addAccountSpy,
     validationSpy
   }
 }
@@ -52,5 +55,16 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('4 - Should call AddAccount with correct values', async () => {
+    const { sut, addAccountSpy } = makeSut()
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(addAccountSpy.params).toEqual({
+      name: request.name,
+      email: request.email,
+      password: request.password
+    })
   })
 })
