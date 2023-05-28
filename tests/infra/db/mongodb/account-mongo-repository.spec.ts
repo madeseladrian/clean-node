@@ -3,6 +3,7 @@ import { Collection } from 'mongodb'
 import { AccountMongoRepository, MongoHelper } from '@/infra/db/mongodb'
 
 import { mockAddAccountParams } from '@/tests/domain/mocks'
+import { faker } from '@faker-js/faker'
 
 const makeSut = (): AccountMongoRepository => {
   return new AccountMongoRepository()
@@ -40,6 +41,12 @@ describe('Account Mongo Repository', () => {
       await accountCollection.insertOne(addAccountParams)
       const exists = await sut.checkByEmail(addAccountParams.email)
       expect(exists).toBe(true)
+    })
+
+    test('2 - Should return false if email is invalid', async () => {
+      const sut = makeSut()
+      const exists = await sut.checkByEmail(faker.internet.email())
+      expect(exists).toBe(false)
     })
   })
 })
