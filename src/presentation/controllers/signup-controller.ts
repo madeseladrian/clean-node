@@ -1,21 +1,22 @@
 import { AddAccount } from '@/domain/usecases'
 
-import { Validation } from '@/presentation/contracts'
+import { Controller, Validation } from '@/presentation/contracts'
 import { EmailInUseError } from '@/presentation/errors'
 import {
+  HttpResponse,
   addAccount,
   badRequest,
   forbidden,
   serverError
 } from '@/presentation/helpers'
 
-export class SignUpController {
+export class SignUpController implements Controller {
   constructor(
     private readonly addAccount: AddAccount,
     private readonly validation: Validation
   ) {}
 
-  async handle(request: SignUpController.Request): Promise<any> {
+  async handle(request: SignUpController.Request): Promise<HttpResponse> {
     try {
       const error = this.validation.validate(request)
       if (error) {

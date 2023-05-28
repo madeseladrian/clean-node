@@ -1,9 +1,5 @@
 import { ServerError } from '@/presentation/errors'
-
-export type HttpResponse = {
-  statusCode: number
-  body: any
-}
+import { HttpResponse } from '@/presentation/helpers'
 
 export const addAccount = (data: any): HttpResponse => ({
   statusCode: 201,
