@@ -94,4 +94,13 @@ describe('DbAddAccount Usecase', () => {
     const result = await sut.add(params)
     expect(result).toBe(false)
   })
+
+  test('9 - Should throw if AddAccountRepository throws', async () => {
+    const { sut, addAccountRepositorySpy } = makeSut()
+    jest
+      .spyOn(addAccountRepositorySpy, 'add')
+      .mockRejectedValueOnce(new Error())
+    const promise = sut.add(params)
+    await expect(promise).rejects.toThrow()
+  })
 })
