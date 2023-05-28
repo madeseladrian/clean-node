@@ -1,4 +1,4 @@
-import { CheckAccountByEmailRepository } from '@/data/contracts/'
+import { CheckAccountByEmailRepository } from '@/data/contracts/db'
 
 export class CheckAccountByEmailRepositorySpy
   implements CheckAccountByEmailRepository

@@ -1,11 +1,12 @@
 import { DbAddAccount } from '@/data/usecases'
 
 import { mockAddAccountParams } from '@/tests/domain/mocks'
-import { CheckAccountByEmailRepositorySpy } from '@/tests/data/mocks'
+import { CheckAccountByEmailRepositorySpy, HasherSpy } from '@/tests/data/mocks'
 
 type SutTypes = {
   sut: DbAddAccount
   checkAccountByEmailRepositorySpy: CheckAccountByEmailRepositorySpy
+  hasherSpy: HasherSpy
 }
 
 const params = mockAddAccountParams()
@@ -13,11 +14,13 @@ const params = mockAddAccountParams()
 const makeSut = (): SutTypes => {
   const checkAccountByEmailRepositorySpy =
     new CheckAccountByEmailRepositorySpy()
+  const hasherSpy = new HasherSpy()
 
-  const sut = new DbAddAccount(checkAccountByEmailRepositorySpy)
+  const sut = new DbAddAccount(checkAccountByEmailRepositorySpy, hasherSpy)
   return {
     sut,
-    checkAccountByEmailRepositorySpy
+    checkAccountByEmailRepositorySpy,
+    hasherSpy
   }
 }
 
@@ -49,5 +52,11 @@ describe('DbAddAccount Usecase', () => {
       .mockRejectedValueOnce(new Error())
     const promise = sut.add(params)
     await expect(promise).rejects.toThrow()
+  })
+
+  test('5 - Should call Hasher with correct plaintext', async () => {
+    const { sut, hasherSpy } = makeSut()
+    await sut.add(params)
+    expect(hasherSpy.plaintext).toBe(params.password)
   })
 })
