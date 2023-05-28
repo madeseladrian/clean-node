@@ -1,7 +1,8 @@
 import { AddAccount } from '@/domain/usecases'
 
 import { Validation } from '@/presentation/contracts'
-import { badRequest, serverError } from '@/presentation/helpers'
+import { EmailInUseError } from '@/presentation/errors'
+import { badRequest, forbidden, serverError } from '@/presentation/helpers'
 
 export class SignUpController {
   constructor(
@@ -16,7 +17,10 @@ export class SignUpController {
         return badRequest(error)
       }
       const { name, email, password } = request
-      await this.addAccount.add({ name, email, password })
+      const isValid = await this.addAccount.add({ name, email, password })
+      if (!isValid) {
+        return forbidden(new EmailInUseError())
+      }
     } catch (error: any) {
       return serverError(error)
     }

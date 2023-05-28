@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker'
 
 import { SignUpController } from '@/presentation/controllers'
-import { MissingParamError } from '@/presentation/errors'
-import { badRequest, serverError } from '@/presentation/helpers'
+import { EmailInUseError, MissingParamError } from '@/presentation/errors'
+import { badRequest, forbidden, serverError } from '@/presentation/helpers'
 
 import { throwError } from '@/tests/domain/mocks'
 import { AddAccountSpy, ValidationSpy } from '@/tests/presentation/mocks'
@@ -66,5 +66,12 @@ describe('SignUp Controller', () => {
       email: request.email,
       password: request.password
     })
+  })
+
+  test('5 - Should return 403 if AddAccount returns false', async () => {
+    const { sut, addAccountSpy } = makeSut()
+    addAccountSpy.result = false
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
   })
 })
