@@ -1,12 +1,16 @@
 import { AddAccount } from '@/domain/usecases'
 
 import { Hasher } from '@/data/contracts/cryptography'
-import { CheckAccountByEmailRepository } from '@/data/contracts/db'
+import {
+  AddAccountRepository,
+  CheckAccountByEmailRepository
+} from '@/data/contracts/db'
 
 export class DbAddAccount {
   constructor(
     private readonly checkAccountByEmailRepository: CheckAccountByEmailRepository,
-    private readonly hasher: Hasher
+    private readonly hasher: Hasher,
+    private readonly addAccountRepository: AddAccountRepository
   ) {}
 
   async add(params: AddAccount.Params): Promise<AddAccount.Result> {
@@ -15,8 +19,11 @@ export class DbAddAccount {
     )
     let isValid = false
     if (!exists) {
-      await this.hasher.hash(params.password)
-      isValid = true
+      const hashedPassword = await this.hasher.hash(params.password)
+      isValid = await this.addAccountRepository.add({
+        ...params,
+        password: hashedPassword
+      })
     }
     return isValid
   }

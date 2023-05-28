@@ -1,9 +1,24 @@
-import { CheckAccountByEmailRepository } from '@/data/contracts/db'
+import {
+  AddAccountRepository,
+  CheckAccountByEmailRepository
+} from '@/data/contracts/db'
+
+export class AddAccountRepositorySpy implements AddAccountRepository {
+  params?: AddAccountRepository.Params
+  result = true
+
+  async add(
+    params: AddAccountRepository.Params
+  ): Promise<AddAccountRepository.Result> {
+    this.params = params
+    return this.result
+  }
+}
 
 export class CheckAccountByEmailRepositorySpy
   implements CheckAccountByEmailRepository
 {
-  email = ''
+  email?: string
   result = false
 
   async checkByEmail(

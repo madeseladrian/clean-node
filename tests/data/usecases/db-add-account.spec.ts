@@ -1,12 +1,17 @@
 import { DbAddAccount } from '@/data/usecases'
 
 import { mockAddAccountParams } from '@/tests/domain/mocks'
-import { CheckAccountByEmailRepositorySpy, HasherSpy } from '@/tests/data/mocks'
+import {
+  AddAccountRepositorySpy,
+  CheckAccountByEmailRepositorySpy,
+  HasherSpy
+} from '@/tests/data/mocks'
 
 type SutTypes = {
   sut: DbAddAccount
   checkAccountByEmailRepositorySpy: CheckAccountByEmailRepositorySpy
   hasherSpy: HasherSpy
+  addAccountRepositorySpy: AddAccountRepositorySpy
 }
 
 const params = mockAddAccountParams()
@@ -15,12 +20,18 @@ const makeSut = (): SutTypes => {
   const checkAccountByEmailRepositorySpy =
     new CheckAccountByEmailRepositorySpy()
   const hasherSpy = new HasherSpy()
+  const addAccountRepositorySpy = new AddAccountRepositorySpy()
 
-  const sut = new DbAddAccount(checkAccountByEmailRepositorySpy, hasherSpy)
+  const sut = new DbAddAccount(
+    checkAccountByEmailRepositorySpy,
+    hasherSpy,
+    addAccountRepositorySpy
+  )
   return {
     sut,
     checkAccountByEmailRepositorySpy,
-    hasherSpy
+    hasherSpy,
+    addAccountRepositorySpy
   }
 }
 
@@ -65,5 +76,15 @@ describe('DbAddAccount Usecase', () => {
     jest.spyOn(hasherSpy, 'hash').mockRejectedValueOnce(new Error())
     const promise = sut.add(params)
     await expect(promise).rejects.toThrow()
+  })
+
+  test('7 - Should call AddAccountRepository with correct values', async () => {
+    const { sut, hasherSpy, addAccountRepositorySpy } = makeSut()
+    await sut.add(params)
+    expect(addAccountRepositorySpy.params).toEqual({
+      name: params.name,
+      email: params.email,
+      password: hasherSpy.digest
+    })
   })
 })
