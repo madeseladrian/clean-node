@@ -1,10 +1,14 @@
-import { Validation } from '@/presentation/contracts'
+import { Controller, Validation } from '@/presentation/contracts'
+import { HttpResponse, badRequest } from '@/presentation/helpers'
 
-export class SignUpController {
+export class SignUpController implements Controller {
   constructor(private readonly validation: Validation) {}
 
-  async handle(request: SignUpController.Request): Promise<void> {
-    this.validation.validate(request)
+  async handle(request: SignUpController.Request): Promise<any> {
+    const error = this.validation.validate(request)
+    if (error) {
+      return badRequest(error)
+    }
   }
 }
 
