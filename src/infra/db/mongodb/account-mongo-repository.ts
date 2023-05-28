@@ -4,7 +4,9 @@ import {
 } from '@/data/contracts/db'
 import { MongoHelper } from '@/infra/db/mongodb'
 
-export class AccountMongoRepository implements AddAccountRepository {
+export class AccountMongoRepository
+  implements AddAccountRepository, CheckAccountByEmailRepository
+{
   async add(
     data: AddAccountRepository.Params
   ): Promise<AddAccountRepository.Result> {
