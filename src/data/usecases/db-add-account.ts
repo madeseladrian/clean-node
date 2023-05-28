@@ -6,7 +6,7 @@ import {
   CheckAccountByEmailRepository
 } from '@/data/contracts/db'
 
-export class DbAddAccount {
+export class DbAddAccount implements AddAccount {
   constructor(
     private readonly checkAccountByEmailRepository: CheckAccountByEmailRepository,
     private readonly hasher: Hasher,
